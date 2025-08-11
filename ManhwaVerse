@@ -1,0 +1,2884 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManhwaVerse - Seu Portal de Manhwas</title>
+078    <!-- Fontes - Inter para um look moderno e limpo -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap" rel="stylesheet">
+    <style>
+        /* Reset CSS Básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Estilos Globais do Corpo */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #151520 50%, #0d0d15 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden; /* Evita rolagem horizontal indesejada */
+        }
+
+        /* Estilo da Barra de Rolagem */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #252535;
+        }⁷
+
+        ::-webkit-scrollbar-thumb {
+            background: #4a69bd;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5f80e0;
+        }
+
+        /* Classes Utilitárias (similar ao Tailwind para alguns casos específicos) */
+        .flex { display: flex; }
+        .justify-between { justify-content: space-between; }
+        .items-center { align-items: center; }
+        .gap-4 { gap: 1rem; }
+        .gap-2 { gap: 0.5rem; }
+        .flex-wrap { flex-wrap: wrap; }
+        .hidden { display: none; }
+        .block { display: block; }
+        .w-full { width: 100%; }
+        .text-center { text-align: center; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded-full { border-radius: 9999px; }
+        .bg-gray-800 { background-color: #2d3748; } /* Cor de fundo genérica */
+
+        /* Header */
+        .header {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            border-bottom: 1px solid #1a1a2e;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .header-container {
+            max-width: 1300px; /* Mais largo para desktop */
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-family: 'Fjalla One', sans-serif; /* Fonte distinta para o logo */
+            font-size: 2.5rem; /* Maior */
+            font-weight: bold;
+            background: linear-gradient(90deg, #6a82fb, #fc5c7d); /* Gradiente vibrante */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            padding: 0.5rem 0;
+            cursor: pointer;
+        }
+        .logo:hover {
+            transform: scale(1.02);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .nav-wrapper {
+            display: flex;
+            flex-grow: 1; /* Permite que o wrapper ocupe espaço */
+            justify-content: space-between;
+            align-items: center;
+            margin-left: 2rem; /* Espaço entre logo e nav */
+        }
+        @media (max-width: 1024px) {
+            .nav-wrapper {
+                margin-left: 0;
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu a {
+            color: #c0c0c0;
+            text-decoration: none;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(106, 130, 251, 0.15); /* Cor primária do gradiente com opacidade */
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(106, 130, 251, 0.3);
+        }
+
+        .nav-menu a.active-nav-link {
+            background: linear-gradient(90deg, #6a82fb, #fc5c7d);
+            color: #fff;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(252, 92, 125, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .search-auth-area {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+        @media (max-width: 1024px) {
+            .search-auth-area {
+                width: 100%;
+                justify-content: center;
+                margin-top: 1rem;
+            }
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            padding: 0.7rem 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            width: 200px; /* Largura padrão */
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #6a82fb;
+            box-shadow: 0 0 15px rgba(106, 130, 251, 0.4);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .auth-buttons button {
+            background: linear-gradient(90deg, #6a82fb, #fc5c7d);
+            border: none;
+            padding: 0.7rem 1.2rem;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-buttons button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: #fc5c7d;
+            position: relative; /* Para o dropdown */
+        }
+
+        .user-info .username-display {
+            cursor: pointer;
+            padding: 0.5rem 0.8rem;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+        .user-info .username-display:hover {
+            background: rgba(252, 92, 125, 0.1);
+        }
+
+        .user-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(21, 21, 32, 0.95);
+            border: 1px solid #2a2a3a;
+            border-radius: 8px;
+            padding: 0.5rem 0;
+            min-width: 150px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            display: none;
+            flex-direction: column;
+            z-index: 100;
+        }
+        .user-dropdown-menu.active {
+            display: flex;
+        }
+        .user-dropdown-menu a {
+            padding: 0.8rem 1rem;
+            color: #c0c0c0;
+            text-decoration: none;
+            transition: background 0.2s ease;
+            white-space: nowrap;
+        }
+        .user-dropdown-menu a:hover {
+            background: rgba(106, 130, 251, 0.1);
+            color: #fff;
+        }
+
+
+        /* Hamburger Menu Icon (Mobile Only) */
+        .menu-icon {
+            display: none;
+            font-size: 2.2rem;
+            cursor: pointer;
+            color: #fff;
+            padding: 0.5rem;
+            order: -1; /* Coloca antes de outros itens na flexbox */
+        }
+
+        @media (max-width: 1024px) { /* Breakpoint para mobile */
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem;
+            }
+            .menu-icon {
+                display: block;
+                align-self: flex-end; /* Move para o canto superior direito do container */
+                margin-top: -3.5rem; /* Ajuste para o padding do header */
+                margin-right: 0.5rem;
+            }
+            .logo {
+                width: 100%;
+                text-align: center;
+                margin-top: -1.5rem;
+                font-size: 2rem;
+            }
+            .nav-wrapper {
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 1rem;
+                display: none; /* Escondido por padrão */
+                transition: max-height 0.3s ease-out;
+                max-height: 0;
+                overflow: hidden;
+            }
+            .nav-wrapper.active {
+                max-height: 300px; /* Altura máxima para mostrar o conteúdo */
+                display: flex;
+            }
+            .nav-menu {
+                flex-direction: column;
+                width: 100%;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+            }
+            .nav-menu a {
+                width: 100%;
+                text-align: center;
+                padding: 0.6rem 1rem;
+            }
+            .search-auth-area {
+                flex-di48irection: column;
+                width: 100%;
+                gap: 0.8rem;
+            }
+            .search-input {
+                max-width: none;
+                width: 90%; /* Ajuste para preencher melhor em mobile */
+            }
+            .auth-buttons, .user-info {
+                width: 90%;
+                justify-content: center;
+            }
+        }
+
+
+        /* Main Content Container */
+        .main-container {
+            flex: 1;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem; /* Espaço entre as seções */
+        }
+        @media (max-width: 767px) {
+            .main-container {
+                padding: 1rem;
+                gap: 2rem;
+            }
+        }
+
+        /* Hero Section (Carousel) */
+        .hero-carousel {
+            position: relative;
+            width: 100%;
+            height: 450px; /* Altura fixa para o carrossel */
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            background: #1a1a2e; /* Fundo para quando não há imagem */
+        }
+        @media (max-width: 767px) {
+            .hero-carousel {
+                height: 300px; /* Altura menor para mobile */
+                border-radius: 15px;
+            }
+        }
+
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 3rem;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            background-repeat: no-repeat;
+        }
+        .carousel-slide.active {
+            opacity: 1;
+        }
+        .carousel-slide::before { /* Overlay escuro */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 1;
+            max-width: 50%; /* Limita a largura do conteúdo */
+            color: #fff;
+        }
+        @media (max-width: 767px) {
+            .slide-content {
+                max-width: 90%;
+                padding: 2rem;
+                text-align: center;
+            }
+        }
+
+        .slide-title {
+            font-family: 'Fjalla One', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            text-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
+        }
+        @media (max-width: 767px) {
+            .slide-title {
+                font-size: 2rem;
+            }
+        }
+
+        .slide-description {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Limita a 3 linhas */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        @media (max-width: 767px) {
+            .slide-description {
+                font-size: 0.9rem;
+                -webkit-line-clamp: 2; /* Limita a 2 linhas em mobile */
+            }
+        }
+
+        .btn-read-hero {
+            background: linear-gradient(90deg, #6a82fb, #fc5c7d);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+        .btn-read-hero:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 2;
+        }
+
+        .indicator {
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .indicator.active {
+            background: #6a82fb;
+            width: 14px;
+            height: 14px;
+            box-shadow: 0 0 8px rgba(106, 130, 251, 0.6);
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-family: 'Fjalla One', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #fc5c7d; /* Cor do gradiente */
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        @media (max-width: 767px) {
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        /* Manhwa Grid */
+        .manhwa-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Auto-ajuste para mobile */
+            gap: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #1a1a2e; /* Separador de seção */
+        }
+        @media (max-width: 767px) {
+            .manhwa-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+        }
+
+        .manhwa-card {
+            background: rgba(25, 25, 35, 0.9); /* Fundo escuro sutil */
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .manhwa-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+            border-color: #6a82fb;
+        }
+
+        .manhwa-card-image {
+            width: 100%;
+            height: 280px; /* Altura fixa para imagens */
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        @media (max-width: 767px) {
+            .manhwa-card-image {
+                height: 200px;
+            }
+        }
+
+        .manhwa-card-info {
+            padding: 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .manhwa-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+        @media (max-width: 767px) {
+            .manhwa-card-title {
+                font-size: 0.95rem;
+            }
+        }
+
+        .manhwa-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+        @media (max-width: 767px) {
+            .manhwa-card-meta {
+                font-size: 0.7rem;
+            }
+        }
+
+        .manhwa-card-genre {
+            font-size: 0.75rem;
+            background: rgba(252, 92, 125, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 5px;
+            color: #fc5c7d;
+        }
+
+        .latest-update-list .manhwa-card { /* Ajuste para a lista de últimas atualizações */
+            flex-direction: row;
+            align-items: center;
+            background: rgba(25, 25, 35, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .latest-update-list .manhwa-card .manhwa-card-image {
+            width: 80px; /* Mini-capa */
+            height: 100px;
+            border-bottom: none;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .latest-update-list .manhwa-card .manhwa-card-info {
+            padding: 0.8rem;
+        }
+        .latest-update-list .manhwa-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        /* Manga Detail Page */
+        .manga-detail-hero {
+            display: flex;
+            background: rgba(25, 25, 35, 0.9);
+            border-radius: 20px;
+            padding: 3rem;
+            gap: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        @media (max-width: 1024px) {
+            .manga-detail-hero {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 2rem;
+                gap: 2rem;
+            }
+        }
+
+        .manga-detail-cover {
+            flex-shrink: 0;
+        }
+        .manga-detail-cover img {
+            width: 280px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        @media (max-width: 1024px) {
+            .manga-detail-cover img {
+                width: 200px;
+                height: 280px;
+            }
+        }
+
+        .manga-detail-info {
+            flex-grow: 1;
+        }
+
+        .manga-detail-title {
+            font-family: 'Fjalla One', sans-serif;
+            font-size: 3rem;
+            color: #6a82fb;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+        .manga-detail-alt-title {
+            font-size: 1.5rem;
+            color: #a0a0a0;
+            margin-bottom: 1rem;
+        }
+        @media (max-width: 767px) {
+            .manga-detail-title {
+                font-size: 2.2rem;
+            }
+            .manga-detail-alt-title {
+                font-size: 1.2rem;
+            }
+        }
+
+        .manga-detail-rating-status {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: #ccc;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .manga-detail-rating-status span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .manga-detail-genres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            justify-content: center;
+        }
+
+        .manga-detail-genre-tag {
+            background: rgba(252, 92, 125, 0.2);
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #fc5c7d;
+            font-weight: 500;
+        }
+
+        .manga-detail-followers {
+            font-size: 1rem;
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+        }
+
+        .manga-detail-buttons {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .manga-detail-buttons button {
+            background: linear-gradient(90deg, #6a82fb, #fc5c7d);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 25px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+        .manga-detail-buttons button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+        }
+        .manga-detail-buttons button:nth-child(2) { /* Estilo diferente para o segundo botão */
+            background: rgba(106, 130, 251, 0.2);
+            border: 1px solid #6a82fb;
+        }
+        .manga-detail-buttons button:nth-child(2):hover {
+            background: rgba(106, 130, 251, 0.4);
+        }
+
+        /* Synopsis and Details */
+        .manga-section {
+            background: rgba(25, 25, 35, 0.7);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .manga-section h3 {
+            font-family: 'Fjalla One', sans-serif;
+            font-size: 1.8rem;
+            color: #fc5c7d;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(252, 92, 125, 0.3);
+        }
+        .manga-section p, .manga-section ul {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+            opacity: 0.9;
+        }
+        .manga-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .manga-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        .manga-section strong {
+            color: #6a82fb;
+        }
+
+        /* Chapters List */
+        .chapter-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .chapter-navigation button {
+            background: rgba(106, 130, 251, 0.2);
+            border: 1px solid #6a82fb;
+            color: #6a82fb;
+            padding: 0.7rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .chapter-navigation button:hover {
+            background: rgba(106, 130, 251, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .chapter-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(25, 25, 35, 0.5);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 0.8rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .chapter-item:hover {
+            background: rgba(106, 130, 251, 0.1);
+            border-color: #6a82fb;
+            transform: translateX(5px);
+        }
+        .chapter-item span:first-child {
+            font-weight: 600;
+            color: #fff;
+        }
+        .chapter-item span:last-child {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+        .chapters-list-container {
+            max-height: 500px; /* Rolagem para muitos capítulos */
+            overflow-y: auto;
+            padding-right: 10px; /* Para a barra de rolagem */
+        }
+
+        /* Related Series */
+        .related-series-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+        .related-series-card {
+            background: rgba(25, 25, 35, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease;
+        }
+        .related-series-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+        }
+        .related-series-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .related-series-card h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.8rem;
+            color: #fff;
+            text-align: center;
+        }
+
+        /* Reader Page */
+        .reader-container {
+            background: #000000;
+            padding: 2rem 0;
+            min-height: calc(100vh - 100px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .reader-header {
+            width: 100%;
+            max-width: 900px;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .reader-header .btn-back {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ccc;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .reader-header .btn-back:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .reader-chapter-title {
+            font-family: 'Fjalla One', sans-serif;
+            font-size: 2rem;
+            color: #6a82fb;
+            text-align: center;
+            flex-grow: 1;
+        }
+        @media (max-width: 767px) {
+            .reader-chapter-title {
+                font-size: 1.5rem;
+                width: 100%;
+            }
+        }
+        .reader-nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        .reader-nav-buttons button {
+            background: linear-gradient(90deg, #6a82fb, #fc5c7d);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+        .reader-nav-buttons button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+        }
+        .reader-nav-buttons button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            background: #444;
+        }
+
+        .reader-pages-container {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .reader-page-item {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .reader-page-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Comments Section */
+        .comments-section {
+            background: rgba(25, 25, 35, 0.8);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            max-width: 900px; /* Para a seção de comentários no leitor */
+            width: 100%;
+            margin-top: 2rem;
+        }
+        .comments-section h3 {
+            font-family: 'Fjalla One', sans-serif;
+            font-size: 1.5rem;
+            color: #6a82fb;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(106, 130, 251, 0.3);
+        }
+        
+        .comments-sort-filter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            color: #c0c0c0;
+        }
+        .comments-sort-filter select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-appearance: none; /* Remove default arrow on WebKit browsers */
+            -moz-appearance: none; /* Remove default arrow on Firefox */
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 20px;
+        }
+        .comments-sort-filter select:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #6a82fb;
+        }
+
+
+        .comment-input-area {
+            background: rgba(35, 35, 45, 0.9);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .comment-input-area textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: #fff;
+            min-height: 80px;
+            resize: vertical;
+            font-size: 0.95rem;
+        }
+        .comment-input-area textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .comment-input-area button {
+            background: linear-gradient(90deg, #6a82fb, #fc5c7d);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        .comment-input-area button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .comments-list {
+            max-height: 600px; /* Aumenta a altura máxima para rolagem */
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        .comment-item {
+            background: rgba(35, 35, 45, 0.9);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .comment-item.reply {
+            margin-left: 3rem; /* Indentação para respostas */
+            background: rgba(45, 45, 55, 0.9); /* Cor diferente para respostas */
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+        @media (max-width: 767px) {
+            .comment-item.reply {
+                margin-left: 1rem; /* Menor indentação em mobile */
+            }
+        }
+        .comment-header-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.5rem;
+        }
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #6a82fb, #fc5c7d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .comment-author {
+            font-weight: bold;
+            color: #fc5c7d;
+            font-size: 0.95rem;
+        }
+        .comment-date {
+            font-size: 0.75rem;
+            opacity: 0.6;
+            margin-left: auto; /* Empurra para a direita */
+            white-space: nowrap;
+        }
+        .comment-text {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #e0e0e0;
+            margin-bottom: 0.8rem;
+        }
+        .comment-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+        .vote-button {
+            background: none;
+            border: none;
+            color: #a0a0a0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        .vote-button:hover {
+            transform: translateY(-2px);
+        }
+        .vote-button.upvote:hover { color: #6a82fb; }
+        .vote-button.downvote:hover { color: #fc5c7d; }
+        .vote-button.active { font-weight: bold; }
+        .vote-button.active.upvote { color: #6a82fb; }
+        .vote-button.active.downvote { color: #fc5c7d; }
+
+        .reply-button {
+            background: none;
+            border: none;
+            color: #6a82fb;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        .reply-button:hover {
+            text-decoration: underline;
+            transform: translateY(-2px);
+        }
+
+        .reply-input-area {
+            background: rgba(50, 50, 60, 0.9);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        .modal-content {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid #2a2a3a;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .modal.active .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            color: #fc5c7d;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .modal-close-btn:hover {
+            transform: rotate(90deg);
+        }
+        .modal-content h2 {
+            font-family: 'Fjalla One', sans-serif;
+            font-size: 2rem;
+            color: #6a82fb;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .modal-content input {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: #fff;
+        }
+        .modal-content input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .modal-content button {
+            background: linear-gradient(90deg, #6a82fb, #fc5c7d);
+            color: white;
+            padding: 1rem;
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .modal-content button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        .modal-content p {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .modal-content p a {
+            color: #6a82fb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .modal-content p a:hover {
+            text-decoration: underline;
+        }
+        .manga-modal-detail-info { /* Para o modal de detalhes do manhwa */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            align-items: flex-start;
+        }
+        .manga-modal-detail-info .cover-placeholder {
+            width: 120px;
+            height: 180px;
+            background: linear-gradient(45deg, #2a2a3a, #4a4a5a);
+            border-radius: 8px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #888;
+        }
+        .manga-modal-detail-info .text-content {
+            flex-grow: 1;
+        }
+        .manga-modal-detail-info .text-content h3 {
+            font-family: 'Fjalla One', sans-serif;
+            font-size: 1.8rem;
+            color: #6a82fb;
+            margin-bottom: 0.5rem;
+        }
+        .manga-modal-detail-info .text-content p {
+            text-align: left;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        .manga-modal-detail-info .text-content .genres-inline span {
+            font-size: 0.8rem;
+            background: rgba(252, 92, 125, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 5px;
+            color: #fc5c7d;
+            margin-right: 0.5rem;
+        }
+        .manga-modal-chapters-list {
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        /* Genre Search Container */
+        .genre-search-container {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .genre-search-container .search-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            font-size: 1rem;
+        }
+        @media (max-width: 767px) {
+            .genre-search-container .search-input {
+                width: 90%;
+            }
+        }
+
+        /* Genre Tags Styling */
+        .genre-tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            max-height: 200px; /* Limita a altura e permite rolagem para muitas tags */
+            overflow-y: auto;
+            padding-right: 5px; /* Para a barra de rolagem */
+            border: 1px solid rgba(255, 255, 255, 0.05); /* Borda sutil */
+            border-radius: 10px;
+            padding: 1rem;
+        }
+        @media (max-width: 767px) {
+            .genre-tags-container {
+                justify-content: flex-start;
+                padding: 0.8rem;
+            }
+        }
+
+        .genre-tag {
+            background: rgba(252, 92, 125, 0.2); /* Cor base do gradiente rosa */
+            color: #fc5c7d; /* Texto rosa */
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent; /* Borda transparente por padrão */
+            white-space: nowrap; /* Evita quebras de linha */
+        }
+
+        .genre-tag:hover {
+            background: rgba(252, 92, 125, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .genre-tag.active-genre-tag {
+            background: linear-gradient(90deg, #6a82fb, #fc5c7d); /* Gradiente ativo */
+            color: #fff; /* Texto branco para ativo */
+            font-weight: bold;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            border-color: #6a82fb; /* Borda combinando com o início do gradiente */
+        }
+
+        /* Groups Section Specific Styles */
+        .group-search-container {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .group-search-container .search-input {
+            width: 100%;
+            max-width: 500px;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            font-size: 1rem;
+        }
+        @media (max-width: 767px) {
+            .group-search-container .search-input {
+                width: 90%;
+            }
+        }
+
+        .group-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Adaptação para mobile */
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        @media (max-width: 767px) {
+            .group-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+        }
+
+        .group-card {
+            background: rgba(25, 25, 35, 0.9);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .group-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+            border-color: #6a82fb;
+        }
+
+        .group-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #2a2a3a, #4a4a5a); /* Fundo para logos placeholder */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #bbb;
+            margin-bottom: 1rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            overflow: hidden; /* Para garantir que imagens de logo redondas funcionem */
+        }
+        .group-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .group-name {
+            font-family: 'Fjalla One', sans-serif;
+            font-size: 1.8rem;
+            color: #6a82fb;
+            margin-bottom: 0.5rem;
+        }
+        .group-slogan {
+            font-size: 0.95rem;
+            color: #c0c0c0;
+            margin-bottom: 1rem;
+            height: 3em; /* Limita a altura para 2 linhas */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .group-stats {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            margin-bottom: 1.5rem;
+        }
+        .group-stats span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .group-stats span strong {
+            color: #fff;
+        }
+        .group-card .btn-view-projects {
+            background: linear-gradient(90deg, #fc5c7d, #ff8c42);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
+        }
+        .group-card .btn-view-projects:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(10, 10, 15, 0.95);
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid #1a1a2e;
+            margin-top: auto;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.4);
+            font-size: 0.9rem;
+            color: #a0a0a0;
+        }
+        .footer-nav {
+            margin-top: 1rem;
+        }
+        .footer-nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .footer-nav a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .footer-nav a:hover {
+            color: #6a82fb;
+        }
+        .disclaimer {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 1rem;
+            padding: 0 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="menu-icon" id="menuIcon">☰</div>
+            <div class="logo" onclick="showPage('home')">ManhwaVerse</div>
+            
+            <div class="nav-wrapper" id="navWrapper">
+                <nav class="nav-menu" id="navMenu">
+                    <a href="#" onclick="showPage('home')">Início</a>
+                    <a href="#" onclick="showPage('catalog')">Catálogo</a>
+                    <a href="#" onclick="showPage('genres')">Gêneros</a>
+                    <a href="#" onclick="showPage('groups')">Grupos</a> <!-- Novo link para Grupos -->
+                    <a href="https://discord.gg/yourserver" target="_blank">Discord</a>
+                    <a href="#" onclick="showPage('dmca')">DMCA</a>
+                </nav>
+                
+                <div class="search-auth-area" id="searchAuthArea">
+                    <div class="search-container">
+                        <input type="text" class="search-input" id="searchInput" placeholder="Pesquisar..." onkeyup="if(event.key === 'Enter') searchManhwa(this.value)">
+                    </div>
+                    <div class="auth-buttons" id="authButtons">
+                        <button onclick="openModal('authModal', 'login')">Login</button>
+                        <button onclick="openModal('authModal', 'register')">Registar</button>
+                    </div>
+                    <div class="user-info" id="userInfo" style="display: none;">
+                        <span class="username-display" id="loggedInUsername" onclick="toggleUserDropdown()"></span>
+                        <div class="user-dropdown-menu" id="userDropdown">
+                            <a href="#" onclick="showPage('profile'); closeUserDropdown();">Perfil</a>
+                            <a href="#" onclick="logout(); closeUserDropdown();">Sair</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container" id="mainContent">
+        <!-- Conteúdo principal será injetado aqui pelo JavaScript -->
+    </main>
+
+    <!-- Modals -->
+    <div class="modal" id="manhwaDetailModal">
+        <div class="modal-content">
+            <span class="modal-close-btn" onclick="closeModal('manhwaDetailModal')">&times;</span>
+            <div id="manhwaDetailModalContent">
+                <!-- Conteúdo dinâmico do manhwa será carregado aqui -->
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <span class="modal-close-btn" onclick="closeModal('authModal')">&times;</span>
+            <div class="auth-form-container" id="authFormContent">
+                <!-- Conteúdo do formulário de login/registo será carregado aqui -->
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="infoModal">
+        <div class="modal-content">
+            <span class="modal-close-btn" onclick="closeModal('infoModal')">&times;</span>
+            <div id="infoModalContent">
+                <!-- Conteúdo de informações gerais será carregado aqui -->
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 ManhwaVerse. Todos os direitos reservados.</p>
+        <nav class="footer-nav">
+            <ul>
+                <li><a href="#" onclick="showPage('terms')">Termos de Uso</a></li>
+                <li><a href="#" onclick="showPage('privacy')">Política de Privacidade</a></li>
+                <li><a href="#" onclick="showPage('dmca')">DMCA</a></li>
+            </ul>
+        </nav>
+        <p class="disclaimer">
+            Os manhwas neste site são apenas prévias das versões originais. Eles podem conter erros de idioma, nomes
+            de personagens e/ou partes do enredo. Por favor, compre a versão original se disponível.
+        </p>
+    </footer>
+
+    <script>
+        // Dados simulados de manhwas
+        const manhwas = [
+            {
+                id: 1,
+                title: "Solo Leveling",
+                alt_title: "나 혼자만 레벨업",
+                description: "Acompanhe a jornada de Sung Jin-Woo, o caçador mais fraco, que ganha uma habilidade misteriosa e se torna o mais forte.",
+                full_description: "Em um mundo onde portais conectam nosso mundo a dimensões perigosas, caçadores arriscam suas vidas para proteger a humanidade. Sung Jin-Woo, o caçador mais fraco de todos, conhecido como 'o mais fraco da humanidade', um dia ganha uma habilidade misteriosa após uma masmorra dupla que quase o levou à morte. Essa habilidade o permite 'subir de nível' como em um jogo, transformando-o no único jogador real em um mundo real. Com novos poderes e desafios, Sung Jin-Woo embarca numa jornada para descobrir os segredos da masmorra e do seu próprio poder, enfrentando monstros aterrorizantes e caçadores formidáveis para proteger aqueles que ama e o mundo que ele conhece. Mas a escuridão espreita, e o caminho para se tornar o mais forte está repleto de sacrifícios.",
+                status: "Completo",
+                chapters: 200,
+                rating: 9.8,
+                genres: ["Ação", "Fantasia", "Isekai", "Aventura", "Poderes", "Webtoon"],
+                followers: "150.5K",
+                lastUpdate: "2025-07-20",
+                image_url: "https://placehold.co/400x560/2a2a3a/f0f0f0?text=Solo+Leveling",
+                type: "Manhwa",
+                posted_by: "Admin",
+                posted_on: "abril 10, 2023",
+                views: "5.2M",
+                related_series: [2, 7]
+            },
+            {
+                id: 2,
+                title: "Omniscient Reader's Viewpoint",
+                alt_title: "전지적 독자 시점",
+                description: "Um homem que conhece o fim de um webnovel apocalíptico agora vive nele. Ele será a chave para a sobrevivência?",
+                full_description: "Kim Dokja é um funcionário comum que encontra consolo lendo seu webnovel favorito, 'Três Maneiras de Sobreviver a um Mundo Apocalíptico'. Um dia, o romance se torna realidade, e ele é o único que leu até o final. Armado com seu conhecimento do enredo, Dokja deve navegar por um mundo cheio de monstros e cenários apocalípticos, utilizando seu insight para sobreviver e proteger seus novos companheiros. No entanto, o conhecimento do futuro pode ser uma maldição, e ele logo percebe que seu papel na história é muito mais complexo do que ele imaginava. Ele se torna o 'leitor onisciente' em sua própria realidade, mas será que ele pode realmente mudar o destino de todos e alcançar um final feliz?",
+                status: "Em Andamento",
+                chapters: 280,
+                rating: 9.6,
+                genres: ["Ação", "Fantasia", "Aventura", "Regressão", "Sobrevivência", "Webtoon"],
+                followers: "120.3K",
+                lastUpdate: "2025-07-24",
+                image_url: "https://placehold.co/400x560/2a2a3a/f0f0f0?text=Omniscient+Reader",
+                type: "Manhwa",
+                posted_by: "UserA",
+                posted_on: "maio 15, 2024",
+                views: "3.8M",
+                related_series: [1, 9]
+            },
+            {
+                id: 3,
+                title: "Trash of the Count's Family",
+                alt_title: "백작가의 망나니가 되었다",
+                description: "Kim Roksoo acorda como Cale Henituse, um personagem menor em um romance, destinado a ser espancado por um dos protagonistas. Ele decide viver uma vida pacífica, mas seus planos são constantemente frustrados pelos eventos do romance e pelos personagens que o rodeiam.",
+                full_description: "Kim Roksoo, um funcionário normal, acorda um dia no corpo de Cale Henituse, um personagem 'lixo' de um romance que ele havia lido. Cale está destinado a ser espancado por um dos protagonistas. Roksoo, agora Cale, decide evitar seu destino infeliz e viver uma vida pacífica e preguiçosa, longe de complicações. No entanto, seus planos de uma vida sem incidentes são constantemente interrompidos pelos eventos da história original e pelos personagens excêntricos que o rodeiam. Sem querer, Cale se envolve em grandes conflitos, tornando-se o herói relutante que o mundo precisa, enquanto tudo o que ele realmente deseja é uma vida de indolência e comida deliciosa.",
+                status: "Em Andamento",
+                chapters: 800,
+                rating: 9.4,
+                genres: ["Aventura", "Comédia", "Fantasia", "Transmigração", "Magia", "Webnovel"],
+                followers: "105.1K",
+                lastUpdate: "2025-07-23",
+                image_url: "https://placehold.co/400x560/2a2a3a/f0f0f0?text=Trash+Count",
+                type: "Manhwa",
+                posted_by: "UserB",
+                posted_on: "junho 01, 2024",
+                views: "2.5M",
+                related_series: [2, 10]
+            },
+            {
+                id: 4,
+                title: "Return of the Mount Hua Sect",
+                alt_title: "화산귀환",
+                description: "Chung Myung, o décimo terceiro Ancião da Seita Mount Hua, reencarna cem anos depois de sua morte e descobre que sua seita está em ruínas. Ele decide restaurar a glória de Mount Hua, enfrentando novos desafios e revivendo antigas amizades.",
+                full_description: "Chung Myung, o décimo terceiro Ancião da gloriosa Seita Mount Hua, morre em batalha após derrotar o Demônio Celestial. Um século depois, ele reencarna no corpo de um jovem mendigo e descobre que sua amada seita está em ruínas, ridicularizada por todos. Furioso e determinado a restaurar a antiga glória de Mount Hua, Chung Myung embarca em uma jornada para treinar a nova geração de discípulos, enfrentar inimigos antigos e novos, e trazer de volta o respeito e o poder que sua seita um dia possuiu. Com sua personalidade excêntrica e suas habilidades de cultivador lendário, ele promete abalar o mundo marcial novamente.",
+                status: "Em Andamento",
+                chapters: 150,
+                rating: 9.7,
+                genres: ["Ação", "Artes Marciais", "Fantasia", "Reencarnação", "Comédia", "Cultivo"],
+                followers: "98.7K",
+                lastUpdate: "2025-07-25",
+                image_url: "https://placehold.co/400x560/2a2a3a/f0f0f0?text=Mount+Hua",
+                type: "Manhwa",
+                posted_by: "UserC",
+                posted_on: "julho 05, 2024",
+                views: "1.9M",
+                related_series: [3, 8]
+            },
+            {
+                id: 5,
+                title: "The Beginning After The End",
+                alt_title: "끝이 아닌 시작",
+                description: "Rei Grey é um monarca com poder incomparável que morre e renasce em um novo mundo de magia e monstros. Ele deve navegar nesta nova vida como Arthur Leywin, um jovem com um destino extraordinário.",
+                full_description: "O Rei Grey, um monarca com poder e riqueza incomparáveis, morre e reencarna em um novo mundo de magia e monstros. No entanto, ele não é mais o rei, mas sim Arthur Leywin, um jovem com um futuro extraordinário. Determinado a corrigir os erros de sua vida passada e proteger sua nova família, Arthur deve aprender a dominar a magia deste novo mundo, enfrentar desafios inimagináveis e desvendar os mistérios de sua própria reencarnação. Sua jornada o leva a uma academia de magia, florestas perigosas e encontros com seres poderosos, enquanto ele forja seu próprio caminho em um mundo que parece mais vasto e perigoso do que ele jamais imaginou.",
+                status: "Em Andamento",
+                chapters: 180,
+                rating: 9.0,
+                genres: ["Aventura", "Fantasia", "Reencarnação", "Magia", "Ação", "Webnovel"],
+                followers: "85.2K",
+                lastUpdate: "2025-07-22",
+                image_url: "https://placehold.co/400x560/2a2a3a/f0f0f0?text=TBATE",
+                type: "Manhwa",
+                posted_by: "UserD",
+                posted_on: "março 20, 2024",
+                views: "1.5M",
+                related_series: [1, 2]
+            },
+            {
+                id: 6,
+                title: "Player Who Can’t Level Up",
+                alt_title: "레벨업 못하는 플레이어",
+                description: "Kim Gi-Gyu acorda num mundo onde as pessoas ganham 'habilidades' e 'níveis'. Ele, no entanto, é o único que não consegue subir de nível. Desesperado para se tornar forte, ele embarca numa jornada para encontrar uma solução.",
+                full_description: "Num mundo onde a humanidade ganhou habilidades especiais e a capacidade de 'subir de nível' após a chegada de 'portais', Kim Gi-Gyu é o único que não consegue subir de nível. Nascido sem o poder de evoluir, ele é ridicularizado e considerado um 'zero'. Mas quando uma habilidade peculiar, 'O Diabo da Forja', desperta dentro dele, Gi-Gyu vê uma oportunidade. Agora, ele pode absorver as características de monstros e objetos para criar novas habilidades. Determinado a não ser mais fraco, ele embarca numa perigosa jornada para se tornar mais forte de uma forma única, enfrentando desafios impensáveis e revelando segredos obscuros do mundo.",
+                status: "Em Andamento",
+                chapters: 90,
+                rating: 8.8,
+                genres: ["Ação", "Fantasia", "Isekai", "Habilidades", "Aventura"],
+                followers: "70.1K",
+                lastUpdate: "2025-07-21",
+                image_url: "https://placehold.co/400x560/2a2a3a/f0f0f0?text=NoLevelUp",
+                type: "Manhwa",
+                posted_by: "UserE",
+                posted_on: "fevereiro 10, 2025",
+                views: "980K",
+                related_series: [1, 7]
+            },
+            {
+                id: 7,
+                title: "Reborn Rich",
+                alt_title: "재벌집 막내아들",
+                description: "Um leal funcionário que é traído e assassinado, reencarna como o filho mais novo da família chaebol que o matou. Ele planeia vingança e ascensão no mundo dos negócios.",
+                full_description: "Yoon Hyun-woo é um gerente leal que dedicou mais de 10 anos à Sunyang Group, uma das maiores corporações da Coreia. No entanto, após descobrir um esquema de corrupção, ele é traído e assassinado pela própria família que servia. Para sua surpresa, ele reencarna como Jin Do-jun, o filho mais novo da família Sunyang. Armado com o conhecimento do futuro e os segredos do grupo, Do-jun decide que não vai apenas sobreviver, mas também derrubar a família Sunyang por dentro, usando seu novo poder e inteligência para se vingar e se tornar o verdadeiro mestre da corporação. Uma saga de vingança, poder e intriga no coração do mundo empresarial coreano.",
+                status: "Completo",
+                chapters: 100,
+                rating: 9.3,
+                genres: ["Drama", "Fantasia", "Reencarnação", "Negócios", "Vingança"],
+                followers: "60.5K",
+                lastUpdate: "2025-07-18",
+                image_url: "https://placehold.co/400x560/2a2a3a/f0f0f0?text=Reborn+Rich",
+                type: "Manhwa",
+                posted_by: "UserF",
+                posted_on: "janeiro 01, 2025",
+                views: "850K",
+                related_series: [3, 5]
+            },
+            {
+                id: 8,
+                title: "My S-Class Hunters",
+                alt_title: "내 S급들을 키웠다",
+                description: "Um caçador de rank F com o talento de 'criar' outros hunters de S-Class. Ele usa essa habilidade para sobreviver em um mundo perigoso e instável.",
+                full_description: "Han Yu-jin, um caçador de rank F, é amplamente considerado o mais fraco. Mas ele possui uma habilidade única: 'My S-Class Hunters' – a capacidade de fortalecer caçadores de alto rank. No entanto, essa habilidade exige que ele 'crie' esses caçadores como se fossem seus filhos, o que o leva a situações hilárias e perigosas. Após um incidente trágico, Yu-jin decide usar sua habilidade para criar os caçadores mais fortes do mundo e proteger sua família. Mas o caminho para o topo é cheio de intrigas, monstros e segredos que podem abalar o equilíbrio do mundo.",
+                status: "Em Andamento",
+                chapters: 180,
+                rating: 9.1,
+                genres: ["Ação", "Comédia", "Fantasia", "Habilidades", "Cultivo"],
+                followers: "55.0K",
+                lastUpdate: "2025-07-19",
+                image_url: "https://placehold.co/400x560/2a2a3a/f0f0f0?text=S-Class+Hunters",
+                type: "Manhwa",
+                posted_by: "UserG",
+                posted_on: "dezembro 25, 2024",
+                views: "720K",
+                related_series: [1, 4]
+            },
+            {
+                id: 9,
+                title: "The Novel's Extra",
+                alt_title: "소설 속 엑스트라",
+                description: "Um estudante de escrita reencarna como um 'extra' em seu próprio romance. Agora, ele deve usar seu conhecimento da história para sobreviver e evitar um final trágico.",
+                full_description: "Kim Hajin, um estudante universitário aspirante a escritor, acorda um dia no mundo de seu próprio romance. Para sua consternação, ele não é o protagonista, mas sim Kim Suho, um personagem insignificante que está fadado a morrer cedo na história. Armado com seu conhecimento do enredo, Hajin, agora Suho, tenta mudar seu destino e o dos personagens que ele mesmo criou. Ele precisa usar sua inteligência, seus conhecimentos sobre o futuro e uma nova habilidade de 'arma' para navegar por um mundo perigoso, cheio de magia, monstros e heróis. Será que um mero extra pode reescrever a própria história e encontrar seu próprio final feliz?",
+                status: "Completo",
+                chapters: 150,
+                rating: 8.9,
+                genres: ["Fantasia", "Ação", "Isekai", "Escolar", "Comédia"],
+                followers: "48.9K",
+                lastUpdate: "2025-07-17",
+                image_url: "https://placehold.co/400x560/2a2a3a/f0f0f0?text=Novel's+Extra",
+                type: "Manhwa",
+                posted_by: "UserH",
+                posted_on: "novembro 11, 2024",
+                views: "650K",
+                related_series: [2, 6]
+            },
+            {
+                id: 10,
+                title: "Doom Breaker",
+                alt_title: "재앙급 영웅님이 귀환하셨다",
+                description: "O último humano a sobreviver a uma invasão demoníaca volta no tempo para impedir o apocalipse. Ele deve usar seu conhecimento do futuro para treinar e se preparar para a guerra.",
+                full_description: "Kim Dokja é um funcionário comum que encontra consolo lendo seu webnovel favorito, 'Três Maneiras de Sobreviver a um Mundo Apocalíptico'. Um dia, o romance se torna realidade, e ele é o único que leu até o final. Armado com seu conhecimento do enredo, Dokja deve navegar por um mundo cheio de monstros e cenários apocalípticos, utilizando seu insight para sobreviver e proteger seus novos companheiros. No entanto, o conhecimento do futuro pode ser uma maldição, e ele logo percebe que seu papel na história é muito mais complexo do que ele imaginava. Ele se torna o 'leitor onisciente' em sua própria realidade, mas será que ele pode realmente mudar o destino de todos e alcançar um final feliz?",
+                status: "Em Andamento",
+                chapters: 120,
+                rating: 9.5,
+                genres: ["Ação", "Fantasia", "Regressão", "Sobrevivência", "Artes Marciais"],
+                followers: "90.0K",
+                lastUpdate: "2025-07-25",
+                image_url: "https://placehold.co/400x560/2a2a3a/f0f0f0?text=Doom+Breaker",
+                type: "Manhwa",
+                posted_by: "UserI",
+                posted_on: "outubro 01, 2024",
+                views: "1.2M",
+                related_series: [1, 5]
+            }
+        ];
+
+        // Dados simulados de grupos de scanlators
+        const scanlatorGroups = [
+            {
+                id: 1,
+                name: "Ape Scans",
+                slogan: "Traduções com agilidade e qualidade incomparável.",
+                members: 25,
+                projects: 12,
+                logo_url: "https://placehold.co/100x100/6a82fb/ffffff?text=AS"
+            },
+            {
+                id: 2,
+                name: "Cosmic Scans",
+                slogan: "Navegando pelos universos das histórias mais incríveis.",
+                members: 18,
+                projects: 8,
+                logo_url: "https://placehold.co/100x100/fc5c7d/ffffff?text=CS"
+            },
+            {
+                id: 3,
+                name: "Dream Translations",
+                slogan: "Transformando sonhos em leitura.",
+                members: 30,
+                projects: 15,
+                logo_url: "https://placehold.co/100x100/4ECDC4/ffffff?text=DT"
+            },
+            {
+                id: 4,
+                name: "Shadow Scans",
+                slogan: "Do anonimato para a sua tela.",
+                members: 20,
+                projects: 10,
+                logo_url: "https://placehold.co/100x100/3a1c71/ffffff?text=SS"
+            },
+            {
+                id: 5,
+                name: "Infinity Works",
+                slogan: "Obras infinitas para a sua paixão.",
+                members: 15,
+                projects: 7,
+                logo_url: "https://placehold.co/100x100/d76d77/ffffff?text=IW"
+            },
+            {
+                id: 6,
+                name: "Crimson Forge",
+                slogan: "Forjando traduções com paixão e precisão.",
+                members: 22,
+                projects: 11,
+                logo_url: "https://placehold.co/100x100/ffaf7b/ffffff?text=CF"
+            },
+             {
+                id: 7,
+                name: "Night Owls Scans",
+                slogan: "Trabalhando incansavelmente para sua leitura noturna.",
+                members: 10,
+                projects: 5,
+                logo_url: "https://placehold.co/100x100/0d0d15/ffffff?text=NOS"
+            },
+            {
+                id: 8,
+                name: "Golden Age Translators",
+                slogan: "Resgatando a era de ouro dos manhwas.",
+                members: 14,
+                projects: 9,
+                logo_url: "https://placehold.co/100x100/FFD700/000000?text=GAT"
+            }
+        ];
+
+
+        // Dados simulados de usuários e comentários (seriam gerenciados no backend)
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        const simulatedUsers = JSON.parse(localStorage.getItem('simulatedUsers')) || {};
+
+        // Comments structure: { manhwaId_chapterNum: [{ id: 'uuid', user: '...', text: '...', timestamp: '...', likes: 0, dislikes: 0, parentId: null, repliedToUser: null, replies: [] }] }
+        let simulatedComments = JSON.parse(localStorage.getItem('simulatedComments')) || {};
+        // Comments Votes structure: { userId: { commentId: 'up' | 'down' } }
+        let simulatedCommentVotes = JSON.parse(localStorage.getItem('simulatedCommentVotes')) || {};
+
+
+        // Estado atual da página (para navegação)
+        let currentPage = 'home';
+        let currentCarouselSlide = 0;
+        let carouselInterval;
+
+        // Inicializar página ao carregar o DOM
+        document.addEventListener('DOMContentLoaded', init);
+
+        function init() {
+            showPage('home');
+            updateAuthUI();
+            setupMobileMenu();
+        }
+
+        // --- Funções de Navegação e Conteúdo Dinâmico ---
+
+        // Configura o menu mobile (ícone de hambúrguer)
+        function setupMobileMenu() {
+            const menuIcon = document.getElementById('menuIcon');
+            const navWrapper = document.getElementById('navWrapper');
+
+            menuIcon.addEventListener('click', () => {
+                navWrapper.classList.toggle('active');
+            });
+
+            // Fecha o menu ao clicar num link de navegação
+            const navLinks = document.querySelectorAll('#navMenu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 1024) { // Verifica o breakpoint
+                        navWrapper.classList.remove('active');
+                    }
+                });
+            });
+        }
+
+        // Define a classe 'active' no link de navegação atual
+        function setActiveNavLink(pageId) {
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.classList.remove('active-nav-link');
+            });
+            const activeLink = document.querySelector(`.nav-menu a[onclick*="showPage('${pageId}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('active-nav-link');
+            }
+        }
+
+        // Cria um cartão de manhwa para grids (destaques, populares, etc.)
+        function createManhwaCard(manhwa) {
+            const card = document.createElement('div');
+            card.className = 'manhwa-card';
+            card.innerHTML = `
+                <img src="${manhwa.image_url}" alt="${manhwa.title} Cover" class="manhwa-card-image" onerror="this.onerror=null; this.src='https://placehold.co/400x560/2a2a3a/f0f0f0?text=Capa+Indisponível';">
+                <div class="manhwa-card-info">
+                    <h3 class="manhwa-card-title">${manhwa.title}</h3>
+                    <p class="manhwa-card-description">${manhwa.description.substring(0, 80)}...</p>
+                    <div class="manhwa-card-meta">
+                        <span>Cap. ${manhwa.chapters}</span>
+                        <span>⭐ ${manhwa.rating}</span>
+                    </div>
+                </div>
+            `;
+            card.onclick = () => openManhwaDetail(manhwa);
+            return card;
+        }
+
+        // Cria um item de atualização para listas (últimas atualizações)
+        function createUpdateItem(manhwa) {
+            const item = document.createElement('div');
+            item.className = 'manhwa-card latest-update-list'; /* Reutiliza estilos de card mas com layout de lista */
+            item.innerHTML = `
+                <img src="${manhwa.image_url}" alt="${manhwa.title} Cover" class="manhwa-card-image" onerror="this.onerror=null; this.src='https://placehold.co/80x100/2a2a3a/f0f0f0?text=Capa';">
+                <div class="manhwa-card-info">
+                    <h3 class="manhwa-card-title">${manhwa.title}</h3>
+                    <p class="manhwa-card-meta">Cap. ${manhwa.chapters} - ${formatDate(manhwa.lastUpdate)}</p>
+                    <div class="manhwa-card-genre">${manhwa.genres[0]}</div>
+                </div>
+            `;
+            item.onclick = () => openManhwaDetail(manhwa);
+            return item;
+        }
+
+        // Formata a data para exibição
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('pt-BR', options);
+        }
+
+        // Exibe manhwas numa grid num container
+        function displayManhwasInGrid(containerId, manhwaList) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+            manhwaList.forEach(manhwa => {
+                container.appendChild(createManhwaCard(manhwa));
+            });
+        }
+
+        // Exibe manhwas como lista de últimas atualizações
+        function displayUpdatesList(containerId, manhwaList) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+            const sortedManhwas = [...manhwaList].sort((a, b) => new Date(b.lastUpdate) - new Date(a.lastUpdate));
+            sortedManhwas.forEach(manhwa => {
+                container.appendChild(createUpdateItem(manhwa));
+            });
+        }
+
+        // --- Carousel para a seção Hero ---
+        const heroSlides = [
+            {
+                id: 1,
+                title: "Solo Leveling",
+                description: "Acompanhe a jornada de Sung Jin-Woo, o caçador mais fraco, que ganha uma habilidade misteriosa e se torna o mais forte.",
+                image: "https://placehold.co/1300x450/1a1a2e/f0f0f0?text=Solo+Leveling+Banner",
+                manhwaId: 1
+            },
+            {
+                id: 2,
+                title: "Omniscient Reader's Viewpoint",
+                description: "Um homem que conhece o fim de um webnovel apocalíptico agora vive nele. Ele será a chave para a sobrevivência?",
+                image: "https://placehold.co/1300x450/1a1a2e/f0f0f0?text=Omniscient+Reader+Banner",
+                manhwaId: 2
+            },
+            {
+                id: 3,
+                title: "Return of the Mount Hua Sect",
+                description: "O lendário ancião de Mount Hua reencarna um século depois para reviver a glória de sua seita em ruínas.",
+                image: "https://placehold.co/1300x450/1a1a2e/f0f0f0?text=Mount+Hua+Banner",
+                manhwaId: 4
+            }
+        ];
+
+        function startCarousel() {
+            const carouselContainer = document.getElementById('heroCarousel');
+            if (!carouselContainer) return; // Se o container não existe, não inicia o carrossel
+
+            carouselContainer.innerHTML = ''; // Limpa qualquer conteúdo anterior
+
+            heroSlides.forEach((slide, index) => {
+                const slideElement = document.createElement('div');
+                slideElement.className = `carousel-slide ${index === 0 ? 'active' : ''}`;
+                slideElement.style.backgroundImage = `url('${slide.image}')`;
+                slideElement.innerHTML = `
+                    <div class="slide-content">
+                        <h2 class="slide-title">${slide.title}</h2>
+                        <p class="slide-description">${slide.description}</p>
+                        <a href="#" class="btn-read-hero" onclick="event.preventDefault(); openManhwaDetail(manhwas.find(m => m.id === ${slide.manhwaId}))">Ler Agora</a>
+                    </div>
+                `;
+                carouselContainer.appendChild(slideElement);
+            });
+
+            const indicatorsContainer = document.createElement('div');
+            indicatorsContainer.className = 'carousel-indicators';
+            heroSlides.forEach((_, index) => {
+                const indicator = document.createElement('span');
+                indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
+                indicator.onclick = () => showSlide(index);
+                indicatorsContainer.appendChild(indicator);
+            });
+            carouselContainer.appendChild(indicatorsContainer);
+
+            currentCarouselSlide = 0; // Reset slide index
+            clearInterval(carouselInterval); // Clear any existing interval
+            carouselInterval = setInterval(nextSlide, 5000); // Auto-advance every 5 seconds
+        }
+
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const indicators = document.querySelectorAll('.indicator');
+
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                if (i === index) {
+                    slide.classList.add('active');
+                }
+            });
+
+            indicators.forEach((indicator, i) => {
+                indicator.classList.remove('active');
+                if (i === index) {
+                    indicator.classList.add('active');
+                }
+            });
+            currentCarouselSlide = index;
+            clearInterval(carouselInterval); // Reseta o timer ao mudar manualmente
+            carouselInterval = setInterval(nextSlide, 5000);
+        }
+
+        function nextSlide() {
+            currentCarouselSlide = (currentCarouselSlide + 1) % heroSlides.length;
+            showSlide(currentCarouselSlide);
+        }
+
+
+        // --- Lógica de Páginas ---
+        function showPage(page) {
+            currentPage = page;
+            const mainContent = document.getElementById('mainContent');
+            mainContent.innerHTML = ''; // Limpa o conteúdo principal
+            setActiveNavLink(page);
+
+            // Esconde o menu mobile se estiver aberto (para desktop quando redimensionar, ou ao navegar)
+            const navWrapper = document.getElementById('navWrapper');
+            if (window.innerWidth <= 1024 && navWrapper.classList.contains('active')) {
+                navWrapper.classList.remove('active');
+            }
+
+            switch(page) {
+                case 'home':
+                    mainContent.innerHTML = `
+                        <section class="hero-carousel" id="heroCarousel"></section>
+                        <section>
+                            <h2 class="section-title">Últimas Atualizações</h2>
+                            <div class="manhwa-grid" id="latestUpdatesGrid"></div>
+                        </section>
+                        <section>
+                            <h2 class="section-title">Populares da Semana</h2>
+                            <div class="manhwa-grid" id="popularThisWeekGrid"></div>
+                        </section>
+                        <section>
+                            <h2 class="section-title">Novos Lançamentos</h2>
+                            <div class="manhwa-grid" id="newReleasesGrid"></div>
+                        </section>
+                    `;
+                    startCarousel();
+                    displayUpdatesList('latestUpdatesGrid', manhwas.slice(0, 6)); /* Apenas 6 para a home */
+                    displayManhwasInGrid('popularThisWeekGrid', [...manhwas].sort((a, b) => b.rating - a.rating).slice(0, 6));
+                    displayManhwasInGrid('newReleasesGrid', [...manhwas].sort((a, b) => new Date(b.posted_on) - new Date(a.posted_on)).slice(0, 6));
+                    break;
+
+                case 'catalog':
+                    mainContent.innerHTML = `
+                        <section>
+                            <h2 class="section-title">Catálogo Completo</h2>
+                            <div class="manhwa-grid" id="fullCatalogGrid"></div>
+                        </section>
+                    `;
+                    displayManhwasInGrid('fullCatalogGrid', manhwas);
+                    break;
+
+                case 'genres':
+                    mainContent.innerHTML = `
+                        <section>
+                            <h2 class="section-title">Explorar por Gênero</h2>
+                            <div class="genre-search-container">
+                                <input type="text" id="genreSearchInput" class="search-input" placeholder="Pesquisar gênero..." onkeyup="filterGenreButtons(this.value)">
+                            </div>
+                            <div class="genre-tags-container" id="allGenresContainer"></div>
+                            <div class="manhwa-grid mt-8" id="genresFilteredManhwas"></div>
+                        </section>
+                    `;
+                    // Popula e filtra os botões de gênero
+                    filterGenreButtons('');
+                    // Exibe os manhwas filtrados por 'Todos' inicialmente
+                    filterByGenre('Todos');
+                    break;
+
+                case 'groups': // Nova página para Grupos
+                    mainContent.innerHTML = `
+                        <section>
+                            <h2 class="section-title">Grupos de Scanlators</h2>
+                            <div class="group-search-container">
+                                <input type="text" id="groupSearchInput" class="search-input" placeholder="Pesquisar grupo..." onkeyup="filterGroups(this.value)">
+                            </div>
+                            <div class="group-grid" id="groupsGrid"></div>
+                        </section>
+                    `;
+                    filterGroups(''); // Exibe todos os grupos inicialmente
+                    break;
+
+                case 'dmca':
+                    mainContent.innerHTML = `
+                        <section class="manga-section">
+                            <h2 class="section-title">DMCA (Digital Millennium Copyright Act)</h2>
+                            <p>O ManhwaVerse respeita os direitos de propriedade intelectual de terceiros e espera que seus usuários também o façam. É nossa política responder a notificações claras de suposta violação de direitos autorais que estejam em conformidade com o Digital Millennium Copyright Act (DMCA).</p>
+                            <p>Se você acredita que seu trabalho protegido por direitos autorais foi postado no ManhwaVerse sem permissão, envie uma notificação de violação de direitos autorais para nosso agente de DMCA, fornecendo as seguintes informações:</p>
+                            <ul>
+                                <li>Uma assinatura física ou eletrônica da pessoa autorizada a agir em nome do proprietário de um direito exclusivo que supostamente foi violado.</li>
+                                <li>Identificação da obra protegida por direitos autorais que você alega ter sido violada.</li>
+                                <li>Identificação do material que se alega estar infringindo ou ser objeto de atividade infratora e que deve ser removido ou cujo acesso deve ser desativado, e informações razoavelmente suficientes para nos permitir localizar o material.</li>
+                                <li>Informações razoavelmente suficientes para nos permitir entrar em contato com a parte reclamante, como endereço, número de telefone e, se disponível, um endereço de e-mail.</li>
+                                <li>Uma declaração de que a parte reclamante acredita de boa-fé que o uso do material da maneira reclamada não é autorizado pelo proprietário dos direitos autorais, seu agente ou pela lei.</li>
+                                <li>Uma declaração de que as informações na notificação são precisas e, sob pena de perjúrio, que a parte reclamante está autorizada a agir em nome do proprietário de um direito exclusivo que supostamente foi violado.</li>
+                            </ul>
+                            <p>Envie sua notificação DMCA para: <a href="mailto:dmca@manhwaverse.com">dmca@manhwaverse.com</a></p>
+                            <p>Por favor, note que qualquer pessoa que deturpe materialmente que o material ou atividade está infringindo pode estar sujeita a responsabilidade.</p>
+                        </section>
+                    `;
+                    break;
+                
+                case 'terms':
+                    mainContent.innerHTML = `
+                        <section class="manga-section">
+                            <h2 class="section-title">Termos de Uso</h2>
+                            <p>Bem-vindo ao ManhwaVerse! Ao acessar ou usar nosso site, você concorda em cumprir e estar vinculado aos seguintes termos e condições de uso. Por favor, leia-os atentamente.</p>
+                            <h3>1. Aceitação dos Termos</h3>
+                            <p>Ao utilizar o ManhwaVerse, você concorda com estes Termos de Uso e com nossa Política de Privacidade. Se você não concorda com qualquer parte destes termos, não deve usar nosso site.</p>
+                            <h3>2. Uso do Conteúdo</h3>
+                            <p>Todo o conteúdo fornecido no ManhwaVerse é apenas para fins informativos e de entretenimento. Não reivindicamos a propriedade de nenhum manhwa ou conteúdo licenciado. Respeitamos os direitos autorais e trabalhamos para garantir que o conteúdo esteja em conformidade com as leis aplicáveis.</p>
+                            <h3>3. Conduta do Usuário</h3>
+                            <p>Você concorda em não:</p>
+                            <ul>
+                                <li>Violar quaisquer leis locais, estaduais, nacionais ou internacionais.</li>
+                                <li>Postar ou transmitir qualquer material ilegal, prejudicial, ameaçador, abusivo, difamatório, vulgar, obsceno ou censurável.</li>
+                                <li>Interferir ou interromper o serviço, servidores ou redes conectadas ao serviço.</li>
+                            </ul>
+                            <h3>4. Limitação de Responsabilidade</h3>
+                            <p>O ManhwaVerse não será responsável por quaisquer danos diretos, indiretos, incidentais, especiais, consequenciais ou exemplares, incluindo, mas não se limitando a, danos por perda de lucros, boa vontade, uso, dados ou outras perdas intangíveis, resultantes do uso ou da incapacidade de usar o serviço.</p>
+                            <h3>5. Alterações nos Termos</h3>
+                            <p>Reservamo-nos o direito de modificar estes Termos de Uso a qualquer momento. Quaisquer alterações entrarão em vigor imediatamente após a publicação no site. Seu uso continuado do site após tais modificações constituirá sua aceitação dos termos revisados.</p>
+                            <h3>6. Contato</h3>
+                            <p>Se você tiver alguma dúvida sobre estes Termos de Uso, entre em contato conosco através do e-mail: <a href="mailto:contato@manhwaverse.com">contato@manhwaverse.com</a>.</p>
+                        </section>
+                    `;
+                    break;
+
+                case 'privacy':
+                    mainContent.innerHTML = `
+                        <section class="manga-section">
+                            <h2 class="section-title">Política de Privacidade</h2>
+                            <p>A sua privacidade é de suma importância para o ManhwaVerse. Esta Política de Privacidade descreve como coletamos, usamos e protegemos suas informações pessoais ao usar nosso site.</p>
+                            <h3>1. Informações que Coletamos</h3>
+                            <p>Coletamos informações que você nos fornece diretamente ao se registrar, como nome de usuário e endereço de e-mail. Também podemos coletar automaticamente informações não-pessoais, como seu endereço IP, tipo de navegador e páginas visitadas, para melhorar a experiência do usuário.</p>
+                            <h3>2. Como Usamos Suas Informações</h3>
+                            <p>Utilizamos as informações coletadas para:</p>
+                            <ul>
+                                <li>Fornecer, operar e manter nosso site.</li>
+                                <li>Melhorar, personalizar e expandir nosso site.</li>
+                                <li>Entender e analisar como você usa nosso site.</li>
+                                <li>Desenvolver novos produtos, serviços, recursos e funcionalidades.</li>
+                                <li>Comunicar-se com você, diretamente ou através de um de nossos parceiros, inclusive para atendimento ao cliente, para fornecer atualizações e outras informações relacionadas ao site.</li>
+                                <li>Processar suas transações.</li>
+                                <li>Detectar e prevenir fraudes.</li>
+                            </ul>
+                            <h3>3. Compartilhamento de Informações</h3>
+                            <p>Não vendemos, trocamos ou transferimos de outra forma suas informações de identificação pessoal a terceiros, exceto quando necessário para operar o site ou conforme exigido por lei.</p>
+                            <h3>4. Segurança de Dados</h3>
+                            <p>Implementamos uma variedade de medidas de segurança para manter a segurança de suas informações pessoais quando você faz um pedido ou insere, envia ou acessa suas informações pessoais.</p>
+                            <h3>5. Cookies</h3>
+                            <p>Utilizamos cookies para ajudar a compilar dados agregados sobre o tráfego do site e a interação do site para que possamos oferecer melhores experiências e ferramentas no futuro.</p>
+                            <h3>6. Seus Direitos de Proteção de Dados</h3>
+                            <p>Em certas circunstâncias, você tem os seguintes direitos de proteção de dados:</p>
+                            <ul>
+                                <li>O direito de acessar, atualizar ou excluir as informações que temos sobre você.</li>
+                                <li>O direito de retificação.</li>
+                                <li>O direito de se opor.</li>
+                                <li>O direito de restrição.</li>
+                                <li>O direito à portabilidade de dados.</li>
+                                <li>O direito de retirar o consentimento.</li>
+                            </ul>
+                            <h3>7. Alterações nesta Política de Privacidade</h3>
+                            <p>Podemos atualizar nossa Política de Privacidade periodicamente. Notificaremos você sobre quaisquer alterações publicando a nova Política de Privacidade nesta página.</p>
+                            <h3>8. Contato</h3>
+                            <p>Se você tiver alguma dúvida sobre esta Política de Privacidade, entre em contato conosco: <a href="mailto:privacidade@manhwaverse.com">privacidade@manhwaverse.com</a>.</p>
+                        </section>
+                    `;
+                    break;
+                
+                case 'profile':
+                    // Página de perfil simples
+                    if (!currentUser) {
+                        mainContent.innerHTML = `<section class="manga-section text-center"><h2 class="section-title">Acesso Negado</h2><p>Por favor, faça login para ver seu perfil.</p><button class="btn-read-hero mt-4" onclick="openModal('authModal', 'login')">Fazer Login</button></section>`;
+                        break;
+                    }
+                    mainContent.innerHTML = `
+                        <section class="manga-section">
+                            <h2 class="section-title">Meu Perfil</h2>
+                            <p><strong>Nome de Utilizador:</strong> ${currentUser.username}</p>
+                            <p><strong>Email:</strong> ${simulatedUsers[currentUser.username]?.email || 'N/A'}</p>
+                            <h3 style="margin-top: 2rem; color: #fc5c7d;">Manhwas Favoritos (Em breve)</h3>
+                            <p>Esta seção mostrará seus manhwas favoritos e histórico de leitura.</p>
+                        </section>
+                    `;
+                    break;
+
+                default:
+                    showPage('home');
+                    break;
+            }
+            window.scrollTo(0, 0); // Rola para o topo da página
+        }
+
+        // --- Lógica de Detalhes do Manhwa e Leitor ---
+
+        // Abre a página de detalhes de um manhwa
+        function openManhwaDetail(manhwa) {
+            const mainContent = document.getElementById('mainContent');
+            mainContent.innerHTML = `
+                <section class="manga-detail-hero">
+                    <div class="manga-detail-cover">
+                        <img src="${manhwa.image_url}" alt="${manhwa.title} Cover" onerror="this.onerror=null; this.src='https://placehold.co/280x400/2a2a3a/f0f0f0?text=Capa+Indisponível';">
+                    </div>
+                    <div class="manga-detail-info">
+                        <h1 class="manga-detail-title">${manhwa.title}</h1>
+                        <h2 class="manga-detail-alt-title">${manhwa.alt_title}</h2>
+                        <div class="manga-detail-rating-status">
+                            <span>⭐ Avaliação: ${manhwa.rating}</span>
+                            <span>Status: ${manhwa.status}</span>
+                            <span>Capítulos: ${manhwa.chapters}</span>
+                        </div>
+                        <div class="manga-detail-genres">
+                            ${manhwa.genres.map(genre => `<span class="manga-detail-genre-tag">${genre}</span>`).join('')}
+                        </div>
+                        <p class="manga-detail-followers">Seguido Por ${manhwa.followers} pessoas</p>
+                        <div class="manga-detail-buttons">
+                            <button onclick="readChapter(${manhwa.id}, ${manhwa.chapters})">Ler Último Capítulo</button>
+                            <button onclick="alert('Funcionalidade de Favoritar em breve!');">Favoritar</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="manga-section">
+                    <h3>Sinopse</h3>
+                    <p>${manhwa.full_description}</p>
+                </section>
+
+                <section class="manga-section">
+                    <h3>Detalhes da Obra</h3>
+                    <ul>
+                        <li><strong>Tipo:</strong> ${manhwa.type}</li>
+                        <li><strong>Postado Por:</strong> ${manhwa.posted_by}</li>
+                        <li><strong>Postado Em:</strong> ${manhwa.posted_on}</li>
+                        <li><strong>Atualizado Em:</strong> ${formatDate(manhwa.lastUpdate)}</li>
+                        <li><strong>Visualizações:</strong> ${manhwa.views}</li>
+                    </ul>
+                </section>
+
+                <section class="manga-section">
+                    <h3>Capítulos</h3>
+                    <div class="chapter-navigation">
+                        <button onclick="readChapter(${manhwa.id}, 1)">Primeiro: Capítulo 1</button>
+                        <button onclick="readChapter(${manhwa.id}, ${manhwa.chapters})">Último: Capítulo ${manhwa.chapters}</button>
+                    </div>
+                    <div class="chapters-list-container">
+                        ${generateChaptersListHtml(manhwa)}
+                    </div>
+                </section>
+
+                <section class="manga-section">
+                    <h3>Séries Relacionadas</h3>
+                    <div class="related-series-grid">
+                        ${manhwa.related_series.map(relatedId => {
+                            const relatedManhwa = manhwas.find(m => m.id === relatedId);
+                            return relatedManhwa ? `
+                                <div class="related-series-card" onclick="openManhwaDetail(manhwas.find(m => m.id === ${relatedManhwa.id}))">
+                                    <img src="${relatedManhwa.image_url}" alt="${relatedManhwa.title} Cover" onerror="this.onerror=null; this.src='https://placehold.co/150x200/2a2a3a/f0f0f0?text=Capa';">
+                                    <h4>${relatedManhwa.title}</h4>
+                                </div>
+                            ` : '';
+                        }).join('')}
+                    </div>
+                </section>
+            `;
+            window.scrollTo(0, 0); // Rola para o topo
+        }
+
+        // Gera o HTML da lista de capítulos para um manhwa
+        function generateChaptersListHtml(manhwa) {
+            let chaptersHtml = '';
+            for (let i = manhwa.chapters; i >= 1; i--) {
+                chaptersHtml += `
+                    <div class="chapter-item" onclick="readChapter(${manhwa.id}, ${i})">
+                        <span>Capítulo ${i}</span>
+                        <span>${formatDate(manhwa.lastUpdate)}</span>
+                    </div>
+                `;
+            }
+            return chaptersHtml;
+        }
+
+        // Mostra o leitor de capítulos
+        function readChapter(manhwaId, chapterNum) {
+            const manhwa = manhwas.find(m => m.id === manhwaId);
+            if (!manhwa) {
+                alert('Manhwa não encontrado!'); return;
+            }
+            if (chapterNum < 1 || chapterNum > manhwa.chapters) {
+                alert(chapterNum < 1 ? 'Você já está no primeiro capítulo!' : 'Este é o último capítulo disponível!');
+                return;
+            }
+
+            const mainContent = document.getElementById('mainContent');
+            const pages = [];
+            for (let i = 1; i <= 8; i++) { // 8 páginas por capítulo para simulação
+                pages.push(`https://placehold.co/800x1200/101015/e0e0e0?text=${manhwa.title}+%0ACap.${chapterNum}+-+Pág.${i}`);
+            }
+
+            mainContent.innerHTML = `
+                <div class="reader-container">
+                    <div class="reader-header">
+                        <button class="nav-btn btn-back" onclick="openManhwaDetail(manhwas.find(m => m.id === ${manhwa.id}))">← Voltar</button>
+                        <h2 class="reader-chapter-title">${manhwa.title} - Capítulo ${chapterNum}</h2>
+                        <div class="reader-nav-buttons">
+                            <button onclick="readChapter(${manhwa.id}, ${chapterNum - 1})" ${chapterNum <= 1 ? 'disabled' : ''}>Anterior</button>
+                            <button onclick="readChapter(${manhwa.id}, ${chapterNum + 1})" ${chapterNum >= manhwa.chapters ? 'disabled' : ''}>Próximo</button>
+                        </div>
+                    </div>
+                    <div class="reader-pages-container">
+                        ${pages.map(src => `<div class="reader-page-item"><img src="${src}" alt="Página do capítulo"></div>`).join('')}
+                    </div>
+
+                    <section class="comments-section">
+                        <h3>Comentários do Capítulo ${chapterNum}</h3>
+                        <div class="comments-sort-filter">
+                            <label for="sortComments">Ordenar por:</label>
+                            <select id="sortComments" onchange="displayComments(${manhwa.id}, ${chapterNum})">
+                                <option value="newest">Mais Recentes</option>
+                                <option value="oldest">Mais Antigos</option>
+                                <option value="most_liked">Mais Curtidos</option>
+                            </select>
+                        </div>
+                        <div class="comment-input-area">
+                            <textarea id="commentInput" placeholder="${currentUser ? 'Escreva o seu comentário...' : 'Faça login para comentar...'}" ${currentUser ? '' : 'disabled'}></textarea>
+                            <button onclick="postComment(${manhwa.id}, ${chapterNum})" ${currentUser ? '' : 'disabled'}>Comentar</button>
+                        </div>
+                        <div class="comments-list" id="commentsList-${manhwa.id}-${chapterNum}">
+                            <!-- Comentários serão carregados aqui -->
+                        </div>
+                    </section>
+
+                    <div class="reader-nav-buttons" style="margin-top: 2rem;">
+                        <button onclick="readChapter(${manhwa.id}, ${chapterNum - 1})" ${chapterNum <= 1 ? 'disabled' : ''}>Capítulo Anterior</button>
+                        <button onclick="openManhwaDetail(manhwas.find(m => m.id === ${manhwa.id}))">Lista de Capítulos</button>
+                        <button onclick="readChapter(${manhwa.id}, ${chapterNum + 1})" ${chapterNum >= manhwa.chapters ? 'disabled' : ''}>Próximo Capítulo</button>
+                    </div>
+                </div>
+            `;
+            window.scrollTo(0, 0);
+            displayComments(manhwa.id, chapterNum);
+        }
+
+        // --- Lógica de Busca ---
+        function searchManhwa(query) {
+            if (!query.trim()) {
+                alert("Por favor, digite algo para pesquisar."); // Usar um modal em app real
+                return;
+            }
+            const mainContent = document.getElementById('mainContent');
+            mainContent.innerHTML = `
+                <section>
+                    <h2 class="section-title">Resultados da Busca para "${query}"</h2>
+                    <div class="manhwa-grid" id="searchResultsGrid"></div>
+                </section>
+            `;
+            const container = document.getElementById('searchResultsGrid');
+            const lowerCaseQuery = query.toLowerCase();
+
+            const filteredManhwas = manhwas.filter(manhwa =>
+                manhwa.title.toLowerCase().includes(lowerCaseQuery) ||
+                manhwa.full_description.toLowerCase().includes(lowerCaseQuery) ||
+                manhwa.genres.some(genre => genre.toLowerCase().includes(lowerCaseQuery))
+            );
+
+            if (filteredManhwas.length === 0) {
+                container.innerHTML = '<p class="text-center opacity-70 py-4">Nenhum manhwa encontrado para sua pesquisa.</p>';
+            } else {
+                displayManhwasInGrid('searchResultsGrid', filteredManhwas);
+            }
+            window.scrollTo(0, 0);
+        }
+
+        // --- Lógica de Filtro por Gênero ---
+        function filterGenreButtons(query) {
+            const allGenresContainer = document.getElementById('allGenresContainer');
+            if (!allGenresContainer) return;
+
+            allGenresContainer.innerHTML = ''; // Limpa os botões existentes
+
+            const lowerCaseQuery = query.toLowerCase().trim();
+
+            // Pega todos os gêneros únicos, incluindo "Todos"
+            const uniqueGenres = ['Todos', ...new Set(manhwas.flatMap(m => m.genres))];
+
+            // Filtra os botões de gênero com base na query
+            uniqueGenres.forEach(genre => {
+                if (genre.toLowerCase().includes(lowerCaseQuery)) {
+                    const genreButton = document.createElement('span');
+                    genreButton.className = 'genre-tag';
+                    genreButton.textContent = genre;
+                    genreButton.onclick = () => filterByGenre(genre);
+                    allGenresContainer.appendChild(genreButton);
+                }
+            });
+
+            // Reaplica o estado ativo ao gênero atualmente selecionado, se houver
+            // Isso é importante porque os botões são recriados a cada filtro
+            const currentSelectedGenre = localStorage.getItem('selectedGenre') || 'Todos';
+            const reRenderedActiveTag = document.querySelector(`.genre-tags-container .genre-tag[onclick*="filterByGenre('${currentSelectedGenre}')"]`);
+            if (reRenderedActiveTag) {
+                reRenderedActiveTag.classList.add('active-genre-tag');
+            } else {
+                // Se o gênero ativo não estiver visível (porque foi filtrado pela pesquisa),
+                // garante que o botão "Todos" esteja ativo se o filtro de pesquisa for limpo.
+                const todosTag = document.querySelector(`.genre-tags-container .genre-tag[onclick*="filterByGenre('Todos')"]`);
+                if (todosTag && query === '') { // Apenas reativa "Todos" se a pesquisa estiver vazia
+                    todosTag.classList.add('active-genre-tag');
+                }
+            }
+        }
+
+        function filterByGenre(genre) {
+            // Remove o estado ativo de todos os botões e aplica ao clicado
+            document.querySelectorAll('#allGenresContainer .genre-tag').forEach(tag => {
+                tag.classList.remove('active-genre-tag');
+            });
+            const activeTag = document.querySelector(`.genre-tags-container .genre-tag[onclick*="filterByGenre('${genre}')"]`);
+            if (activeTag) {
+                activeTag.classList.add('active-genre-tag');
+            }
+            // Salva o gênero selecionado para persistência ao usar o filtro de pesquisa de gênero
+            localStorage.setItem('selectedGenre', genre);
+
+
+            const container = document.getElementById('genresFilteredManhwas');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const filteredManhwas = manhwas.filter(manhwa =>
+                genre === 'Todos' || manhwa.genres.includes(genre)
+            );
+
+            if (filteredManhwas.length === 0) {
+                container.innerHTML = '<p class="text-center opacity-70 py-4">Nenhum manhwa encontrado para este gênero.</p>';
+            } else {
+                displayManhwasInGrid('genresFilteredManhwas', filteredManhwas);
+            }
+        }
+
+        // --- Lógica de Grupos ---
+        // Cria um card de grupo
+        function createGroupCard(group) {
+            const card = document.createElement('div');
+            card.className = 'group-card';
+            card.innerHTML = `
+                <div class="group-logo">
+                    <img src="${group.logo_url}" alt="${group.name} Logo" onerror="this.onerror=null; this.src='https://placehold.co/100x100/2a2a3a/f0f0f0?text=Logo';">
+                </div>
+                <h3 class="group-name">${group.name}</h3>
+                <p class="group-slogan">${group.slogan}</p>
+                <div class="group-stats">
+                    <span>Membros: <strong>${group.members}</strong></span>
+                    <span>Projetos: <strong>${group.projects}</strong></span>
+                </div>
+                <button class="btn-view-projects" onclick="alert('Projetos do grupo ${group.name} em breve!');">Ver Projetos</button>
+            `;
+            return card;
+        }
+
+        // Exibe os grupos em um grid
+        function displayGroupsInGrid(containerId, groupList) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+            if (groupList.length === 0) {
+                container.innerHTML = '<p class="text-center opacity-70 py-4 w-full">Nenhum grupo encontrado.</p>';
+                return;
+            }
+            groupList.forEach(group => {
+                container.appendChild(createGroupCard(group));
+            });
+        }
+
+        // Filtra os grupos com base na pesquisa
+        function filterGroups(query) {
+            const container = document.getElementById('groupsGrid');
+            if (!container) return;
+            const lowerCaseQuery = query.toLowerCase().trim();
+
+            const filteredGroups = scanlatorGroups.filter(group =>
+                group.name.toLowerCase().includes(lowerCaseQuery) ||
+                group.slogan.toLowerCase().includes(lowerCaseQuery)
+            );
+
+            displayGroupsInGrid('groupsGrid', filteredGroups);
+        }
+
+
+        // --- Lógica de Autenticação (Simulada com localStorage) ---
+        function updateAuthUI() {
+            const authButtons = document.getElementById('authButtons');
+            const userInfo = document.getElementById('userInfo');
+            const loggedInUsernameSpan = document.getElementById('loggedInUsername');
+
+            if (currentUser) {
+                authButtons.style.display = 'none';
+                userInfo.style.display = 'flex';
+                loggedInUsernameSpan.textContent = currentUser.username;
+            } else {
+                authButtons.style.display = 'flex';
+                userInfo.style.display = 'none';
+                loggedInUsernameSpan.textContent = '';
+            }
+        }
+
+        function openModal(modalId, formType = null) {
+            const modal = document.getElementById(modalId);
+            if (modalId === 'authModal' && formType) {
+                const authFormContent = document.getElementById('authFormContent');
+                if (formType === 'login') {
+                    authFormContent.innerHTML = `
+                        <h2>Login</h2>
+                        <input type="text" id="loginUsername" placeholder="Nome de Utilizador" required>
+                        <input type="password" id="loginPassword" placeholder="Palavra-passe" required>
+                        <button type="submit" onclick="login()">Entrar</button>
+                        <p>Não tem uma conta? <a href="#" onclick="event.preventDefault(); openModal('authModal', 'register')">Registe-se aqui</a></p>
+                    `;
+                } else if (formType === 'register') {
+                    authFormContent.innerHTML = `
+                        <h2>Registar</h2>
+                        <input type="text" id="registerUsername" placeholder="Nome de Utilizador" required>
+                        <input type="email" id="registerEmail" placeholder="Email" required>
+                        <input type="password" id="registerPassword" placeholder="Palavra-passe" required>
+                        <button type="submit" onclick="register()">Registar</button>
+                        <p>Já tem uma conta? <a href="#" onclick="event.preventDefault(); openModal('authModal', 'login')">Faça login aqui</a></p>
+                    `;
+                }
+            } else if (modalId === 'infoModal') {
+                const infoModalContent = document.getElementById('infoModalContent');
+                // Exemplo de como um modal de informação pode ser preenchido
+                infoModalContent.innerHTML = `<h2>Informação</h2><p>Esta é uma funcionalidade de informação genérica.</p>`;
+            }
+            modal.classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (simulatedUsers[username] && simulatedUsers[username].password === password) {
+                currentUser = { username: username };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                updateAuthUI();
+                closeModal('authModal');
+                alert('Login bem-sucedido!');
+            } else {
+                alert('Nome de utilizador ou palavra-passe inválidos.');
+            }
+        }
+
+        function register() {
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+
+            if (simulatedUsers[username]) {
+                alert('Nome de utilizador já existe. Por favor, escolha outro.');
+                return;
+            }
+
+            if (!username || !email || !password) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            simulatedUsers[username] = { email: email, password: password };
+            localStorage.setItem('simulatedUsers', JSON.stringify(simulatedUsers));
+            currentUser = { username: username };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            updateAuthUI();
+            closeModal('authModal');
+            alert('Registo bem-sucedido! Bem-vindo ao ManhwaVerse!');
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            updateAuthUI();
+            alert('Sessão encerrada.');
+        }
+
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        function closeUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.remove('active');
+        }
+
+        // Fechar dropdown do usuário se clicar fora
+        window.addEventListener('click', function(event) {
+            const userDropdown = document.getElementById('userDropdown');
+            const loggedInUsernameSpan = document.getElementById('loggedInUsername');
+            if (userDropdown && loggedInUsernameSpan && !loggedInUsernameSpan.contains(event.target) && !userDropdown.contains(event.target)) {
+                closeUserDropdown();
+            }
+        });
+
+        // --- Lógica de Comentários (Simulada com localStorage) ---
+
+        // Função auxiliar para encontrar um comentário (e suas respostas) por ID
+        function findCommentById(commentsArray, commentId) {
+            for (let i = 0; i < commentsArray.length; i++) {
+                if (commentsArray[i].id === commentId) {
+                    return commentsArray[i];
+                }
+                if (commentsArray[i].replies && commentsArray[i].replies.length > 0) {
+                    const foundInReplies = findCommentById(commentsArray[i].replies, commentId);
+                    if (foundInReplies) return foundInReplies;
+                }
+            }
+            return null;
+        }
+
+        // Função para gerar um ID único (simples, para fins de demonstração)
+        function generateUniqueId() {
+            return 'cmt_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+        }
+
+        // Renderiza e exibe os comentários
+        function displayComments(manhwaId, chapterNum) {
+            const commentsKey = `manhwa_${manhwaId}_chapter_${chapterNum}_comments`;
+            const commentsContainer = document.getElementById(`commentsList-${manhwaId}-${chapterNum}`);
+            const sortSelect = document.getElementById('sortComments');
+            const sortBy = sortSelect ? sortSelect.value : 'newest';
+
+            if (!commentsContainer) return;
+
+            let currentChapterComments = simulatedComments[commentsKey] || [];
+
+            // Limpa replies-input existentes
+            document.querySelectorAll('.reply-input-area').forEach(el => el.remove());
+
+            // Filtra apenas comentários de nível superior para ordenação
+            let topLevelComments = currentChapterComments.filter(comment => comment.parentId === null);
+
+            // Aplica a ordenação
+            if (sortBy === 'newest') {
+                topLevelComments.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            } else if (sortBy === 'oldest') {
+                topLevelComments.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            } else if (sortBy === 'most_liked') {
+                topLevelComments.sort((a, b) => (b.likes - b.dislikes) - (a.likes - a.dislikes));
+            }
+
+            commentsContainer.innerHTML = ''; // Limpa o container antes de re-renderizar
+
+            if (topLevelComments.length === 0) {
+                commentsContainer.innerHTML = '<p class="text-center opacity-70 py-4">Seja o primeiro a comentar!</p>';
+                return;
+            }
+
+            topLevelComments.forEach(comment => {
+                commentsContainer.appendChild(createCommentElement(comment, manhwaId, chapterNum));
+                // Renderiza respostas se existirem
+                if (comment.replies && comment.replies.length > 0) {
+                    comment.replies.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // Respostas sempre por mais antigas
+                    comment.replies.forEach(reply => {
+                        commentsContainer.appendChild(createCommentElement(reply, manhwaId, chapterNum, true));
+                    });
+                }
+            });
+        }
+
+        // Cria um elemento HTML para um comentário ou resposta
+        function createCommentElement(comment, manhwaId, chapterNum, isReply = false) {
+            const commentItem = document.createElement('div');
+            commentItem.className = `comment-item ${isReply ? 'reply' : ''}`;
+            commentItem.dataset.commentId = comment.id; // Adiciona ID para facilitar a manipulação
+
+            const userVote = currentUser && simulatedCommentVotes[currentUser.username] ? simulatedCommentVotes[currentUser.username][comment.id] : null;
+
+            const likeButtonClass = `vote-button upvote ${userVote === 'up' ? 'active' : ''}`;
+            const dislikeButtonClass = `vote-button downvote ${userVote === 'down' ? 'active' : ''}`;
+
+            commentItem.innerHTML = `
+                <div class="comment-header-info">
+                    <div class="comment-avatar">${comment.user.charAt(0).toUpperCase()}</div>
+                    <div class="comment-author">${comment.user} ${comment.repliedToUser ? `<span style="color: #6a82fb;">@${comment.repliedToUser}</span>` : ''}</div>
+                    <div class="comment-date">${new Date(comment.timestamp).toLocaleString('pt-BR')}</div>
+                </div>
+                <div class="comment-text">${comment.text}</div>
+                <div class="comment-actions">
+                    <button class="${likeButtonClass}" onclick="toggleVote('${comment.id}', 'up', ${manhwaId}, ${chapterNum})">👍 ${comment.likes}</button>
+                    <button class="${dislikeButtonClass}" onclick="toggleVote('${comment.id}', 'down', ${manhwaId}, ${chapterNum})">👎 ${comment.dislikes}</button>
+                    ${!isReply && currentUser ? `<button class="reply-button" onclick="toggleReplyInput('${comment.id}', '${comment.user}')">Responder</button>` : ''}
+                </div>
+                <div id="replyInputArea-${comment.id}" class="reply-input-area hidden"></div>
+            `;
+            return commentItem;
+        }
+
+        // Alterna a visibilidade da área de resposta
+        function toggleReplyInput(commentId, parentUser) {
+            if (!currentUser) {
+                alert('Você precisa estar logado para responder.');
+                openModal('authModal', 'login');
+                return;
+            }
+
+            // Esconde todas as outras áreas de resposta abertas
+            document.querySelectorAll('.reply-input-area').forEach(area => {
+                if (area.id !== `replyInputArea-${commentId}`) {
+                    area.classList.add('hidden');
+                    area.innerHTML = ''; // Limpa o conteúdo
+                }
+            });
+
+            const replyArea = document.getElementById(`replyInputArea-${commentId}`);
+            if (replyArea.classList.contains('hidden')) {
+                replyArea.innerHTML = `
+                    <textarea id="replyText-${commentId}" placeholder="Responder a ${parentUser}..." style="width: 100%; padding: 0.8rem; margin-bottom: 1rem; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #fff; min-height: 60px; resize: vertical; font-size: 0.9rem;"></textarea>
+                    <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                        <button onclick="postComment(null, null, '${commentId}', '${parentUser}')" style="background: linear-gradient(90deg, #6a82fb, #fc5c7d); color: white; padding: 0.6rem 1.2rem; border-radius: 8px; border: none; font-weight: bold; cursor: pointer;">Publicar Resposta</button>
+                        <button onclick="document.getElementById('replyInputArea-${commentId}').classList.add('hidden'); document.getElementById('replyInputArea-${commentId}').innerHTML = '';" style="background: rgba(255, 255, 255, 0.1); color: #ccc; padding: 0.6rem 1.2rem; border-radius: 8px; border: none; cursor: pointer;">Cancelar</button>
+                    </div>
+                `;
+                replyArea.classList.remove('hidden');
+            } else {
+                replyArea.classList.add('hidden');
+                replyArea.innerHTML = '';
+            }
+        }
+
+        // Publica um novo comentário ou resposta
+        function postComment(manhwaId, chapterNum, parentId = null, repliedToUser = null) {
+            if (!currentUser) {
+                alert('Você precisa estar logado para comentar.');
+                openModal('authModal', 'login');
+                return;
+            }
+
+            let commentText;
+            if (parentId) { // Se for uma resposta
+                commentText = document.getElementById(`replyText-${parentId}`).value.trim();
+                manhwaId = manhwaId || parseInt(document.querySelector('.reader-container').dataset.manhwaId);
+                chapterNum = chapterNum || parseInt(document.querySelector('.reader-container').dataset.chapterNum);
+            } else { // Se for um comentário de nível superior
+                commentText = document.getElementById('commentInput').value.trim();
+            }
+
+            if (commentText === '') {
+                alert('Por favor, escreva algo no comentário.');
+                return;
+            }
+
+            const commentsKey = `manhwa_${manhwaId}_chapter_${chapterNum}_comments`;
+            if (!simulatedComments[commentsKey]) {
+                simulatedComments[commentsKey] = [];
+            }
+
+            const newComment = {
+                id: generateUniqueId(),
+                user: currentUser.username,
+                text: commentText,
+                timestamp: new Date().toISOString(),
+                likes: 0,
+                dislikes: 0,
+                parentId: parentId,
+                repliedToUser: repliedToUser,
+                replies: []
+            };
+
+            if (parentId) {
+                const parentComment = findCommentById(simulatedComments[commentsKey], parentId);
+                if (parentComment) {
+                    parentComment.replies.push(newComment);
+                }
+            } else {
+                simulatedComments[commentsKey].push(newComment);
+            }
+
+            localStorage.setItem('simulatedComments', JSON.stringify(simulatedComments));
+
+            // Limpa o input e re-renderiza
+            if (parentId) {
+                document.getElementById(`replyText-${parentId}`).value = '';
+                document.getElementById(`replyInputArea-${parentId}`).classList.add('hidden');
+                document.getElementById(`replyInputArea-${parentId}`).innerHTML = '';
+            } else {
+                document.getElementById('commentInput').value = '';
+            }
+            displayComments(manhwaId, chapterNum);
+        }
+
+        // Lidar com votos (curtir/descurtir)
+        function toggleVote(commentId, type, manhwaId, chapterNum) {
+            if (!currentUser) {
+                alert('Você precisa estar logado para votar.');
+                openModal('authModal', 'login');
+                return;
+            }
+
+            const commentsKey = `manhwa_${manhwaId}_chapter_${chapterNum}_comments`;
+            const chapterComments = simulatedComments[commentsKey] || [];
+            const comment = findCommentById(chapterComments, commentId);
+
+            if (!comment) return;
+
+            const userVoteKey = currentUser.username;
+            if (!simulatedCommentVotes[userVoteKey]) {
+                simulatedCommentVotes[userVoteKey] = {};
+            }
+
+            const currentVote = simulatedCommentVotes[userVoteKey][commentId];
+
+            if (currentVote === type) { // Se já votou no mesmo tipo, remove o voto
+                comment[type === 'up' ? 'likes' : 'dislikes']--;
+                delete simulatedCommentVotes[userVoteKey][commentId];
+            } else { // Se não votou ou votou no tipo oposto
+                if (currentVote === 'up') { // Troca de up para down
+                    comment.likes--;
+                } else if (currentVote === 'down') { // Troca de down para up
+                    comment.dislikes--;
+                }
+                comment[type === 'up' ? 'likes' : 'dislikes']++;
+                simulatedCommentVotes[userVoteKey][commentId] = type;
+            }
+
+            localStorage.setItem('simulatedComments', JSON.stringify(simulatedComments));
+            localStorage.setItem('simulatedCommentVotes', JSON.stringify(simulatedCommentVotes));
+
+            displayComments(manhwaId, chapterNum); // Re-renderiza para atualizar os contadores e cores
+        }
+    </script>
+</body>
+</html>
